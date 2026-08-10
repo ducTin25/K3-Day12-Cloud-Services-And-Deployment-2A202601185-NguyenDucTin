@@ -200,7 +200,6 @@ def ask(
             "out": result["tokens_out"],
         },
     }
-    raise NotImplementedError("TODO (CP3/CP4): cài đặt /ask")
 
 
 if __name__ == "__main__":

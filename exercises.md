@@ -3,7 +3,7 @@
 > **Bài làm cá nhân.** Trả lời bằng lời của chính bạn, dựa trên những gì bạn
 > quan sát được khi chạy code — không sao chép đáp án của người khác.
 >
-> Cách trả lời: thay dòng `> *Câu trả lời của bạn*` bằng câu trả lời.
+> Cách trả lời: thay dòng trả lời mẫu bên dưới mỗi câu bằng câu trả lời của bạn.
 > `grade.py` đếm số câu đã trả lời (15 điểm cho 10 câu).
 >
 > Họ và tên: .......................... Mã học viên: ..........................
@@ -188,4 +188,13 @@ Ghi lại **một** lỗi bạn gặp khi deploy lên cloud (build fail, health 
 timeout, sai REDIS_URL, app không đọc `$PORT`...): thông báo lỗi là gì, bạn
 tìm ra nguyên nhân bằng cách nào, và sửa ra sao?
 
-> _Câu trả lời của bạn_
+> Lỗi đầu tiên khi deploy là Railway báo `Invalid value for '--port': '$PORT' is not a valid integer`.
+> Mình kiểm tra log Railway và thấy lệnh khởi động truyền `$PORT` trực tiếp cho
+> Uvicorn nên biến môi trường chưa được shell thay thế. Mình bỏ lệnh khởi động
+> cũ và dùng lệnh shell trong Dockerfile để đọc `${PORT:-8000}`.
+>
+> Sau đó deploy gặp lỗi `/ready` trả 503 vì service agent chưa kết nối được
+> Redis. Kiểm tra log và service Railway cho thấy app đã bị deploy nhầm vào
+> service Redis. Mình tạo service Redis riêng, trỏ `REDIS_URL` của agent tới
+> reference của Redis service mới, rồi redeploy. Cuối cùng `/health` và `/ready`
+> đều trả 200.
