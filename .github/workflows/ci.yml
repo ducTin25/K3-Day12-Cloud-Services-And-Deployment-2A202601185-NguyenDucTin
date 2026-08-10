@@ -62,11 +62,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy application
-        run: npx --yes @railway/cli up --ci --service agent
+        run: >-
+          npx --yes @railway/cli up --ci
+          --project "$RAILWAY_PROJECT_ID"
+          --environment production
+          --service agent
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
-          RAILWAY_ENVIRONMENT: production
 
       - name: Smoke test health endpoint
         run: |
